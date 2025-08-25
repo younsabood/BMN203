@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ملخصات BMN203: الموارد البشرية</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+        :root {
+            --ch1-color: #3498db;
+            --ch2-color: #2ecc71;
+            --ch3-color: #9b59b6;
+            --ch4-color: #e67e22;
+            --ch5-color: #e74c3c;
+            --ch6-color: #1abc9c;
+            --ch7-color: #f1c40f;
+            --ch8-color: #a2795a;
+            --ch9-color: #34495e;
+            --ch10-color: #16a085;
+
+            --text-color: #2c3e50;
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --quiz-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 3rem;
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .quiz-item {
+            background-color: var(--quiz-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .correct {
+            color: #2ecc71;
+        }
+        .incorrect {
+            color: #e74c3c;
+        }
+        .quiz-button {
+            transition: all 0.2s;
+            border: 2px solid;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 1.1rem;
+        }
+        .quiz-button-true {
+            background-color: #2ecc71;
+            border-color: #2ecc71;
+            color: white;
+        }
+        .quiz-button-false {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+            color: white;
+        }
+        .quiz-button:hover {
+            opacity: 0.8;
+        }
+        .result-message {
+            margin-top: 1.5rem;
+            font-weight: bold;
+            display: none;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--theme-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            display: none;
+            transition: all 0.3s ease-in-out;
+        }
+        .scroll-to-top:hover {
+            opacity: 0.8;
+            transform: translateY(-5px);
+        }
+        .main-tab-button {
+            padding: 1.5rem 2.5rem;
+            border: none;
+            font-weight: bold;
+            color: #7f8c8d;
+            background-color: transparent;
+            transition: all 0.3s ease-in-out;
+            border-radius: 1rem 1rem 0 0;
+            margin-right: 0.5rem;
+            position: relative;
+        }
+        .main-tab-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            height: 4px;
+            background-color: transparent;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .main-tab-button:last-child {
+            margin-right: 0;
+        }
+        .main-tab-button.active {
+            color: var(--theme-color);
+            background-color: var(--bg-color);
+            border-bottom: 4px solid var(--theme-color);
+        }
+        .main-tab-button.active::after {
+            background-color: var(--theme-color);
+        }
+        .main-tab-content {
+            display: none;
+        }
+        .main-tab-content.active {
+            display: block;
+            animation: fadeIn 0.7s ease-in-out;
+        }
+        .title {
+            color: var(--theme-color);
+        }
+        .title-border {
+            border-bottom: 2px solid var(--theme-color);
+        }
+        .colored-text {
+            color: var(--theme-color);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-blue-50 text-gray-800">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-8 flex justify-center items-center">
+            <h1 class="text-4xl font-extrabold text-blue-500 tracking-wide">ملخصات BMN203: الموارد البشرية</h1>
+        </div>
+    </header>
+
+    <!-- Main Content with Tabs -->
+    <main class="container mx-auto px-4 py-16">
+        <div class="card p-0">
+            <!-- Main Tab Buttons -->
+            <div class="flex justify-center flex-wrap -mb-px bg-gray-100 rounded-t-2xl">
+                <button class="main-tab-button active" data-tab="tab1" data-color="#3498db">
+                    <i class="fas fa-book-open ml-2"></i> الفصل الأول
+                </button>
+                <button class="main-tab-button" data-tab="tab2" data-color="#2ecc71">
+                    <i class="fas fa-history ml-2"></i> الفصل الثاني
+                </button>
+                <button class="main-tab-button" data-tab="tab3" data-color="#9b59b6">
+                    <i class="fas fa-tasks ml-2"></i> الفصل الثالث
+                </button>
+                <button class="main-tab-button" data-tab="tab4" data-color="#e67e22">
+                    <i class="fas fa-chart-line ml-2"></i> الفصل الرابع
+                </button>
+                <button class="main-tab-button" data-tab="tab5" data-color="#e74c3c">
+                    <i class="fas fa-user-plus ml-2"></i> الفصل الخامس
+                </button>
+                <button class="main-tab-button" data-tab="tab6" data-color="#1abc9c">
+                    <i class="fas fa-graduation-cap ml-2"></i> الفصل السادس
+                </button>
+                <button class="main-tab-button" data-tab="tab7" data-color="#f1c40f">
+                    <i class="fas fa-check-double ml-2"></i> الفصل السابع
+                </button>
+                <button class="main-tab-button" data-tab="tab8" data-color="#a2795a">
+                    <i class="fas fa-money-bill-wave ml-2"></i> الفصل الثامن
+                </button>
+                <button class="main-tab-button" data-tab="tab9" data-color="#34495e">
+                    <i class="fas fa-exchange-alt ml-2"></i> الفصل التاسع
+                </button>
+                <button class="main-tab-button" data-tab="tab10" data-color="#16a085">
+                    <i class="fas fa-shield-alt ml-2"></i> الفصل العاشر
+                </button>
+            </div>
+
+            <!-- Main Tab Contents -->
+            <div class="p-12">
+                <!-- Chapter 1 -->
+                <div id="tab1" class="main-tab-content active">
+                    <h2 class="text-4xl font-bold title mb-8 border-b-2 title-border pb-4">الفصل الأول: مقدمة ومفاهيم أساسية</h2>
+                    <p class="text-xl leading-relaxed mb-8">
+                        تعد إدارة الموارد البشرية وظيفة حيوية في المنظمات الحديثة، حيث تساهم في تحقيق الأهداف التنظيمية من خلال إدارة رأس المال البشري بفاعلية.
+                    </p>
+                    <div class="space-y-12">
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-blue-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">المنظمة</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                هي نظام اجتماعي مركب (سواء أكانت شركة أو هيئة أو وحدة حكومية) تضم نظماً فرعية أصغر (قطاعات أو إدارات) تعمل في علاقات تبادلية وتكاملية لتحقيق هدف معين. وتعتبر نظاماً منفتحاً على بيئتها المحيطة يأخذ منها ويعطيها ويتأثر بها.
+                            </p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-blue-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">مفهوم إدارة الموارد البشرية</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                تنبع صعوبة تحديد مفهوم إدارة الموارد البشرية من كثرة المرادفات، ولكنها بشكل عام هي مجموعة من الأنشطة والفعاليات التي تهدف إلى إدارة الموارد البشرية بفعالية لمصلحة المنظمة والفرد والمجتمع.
+                            </p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl">
+                            <h3 class="text-2xl font-semibold text-gray-700">مستويات إدارة الموارد البشرية</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-4">
+                                <li class="font-bold text-blue-600">كممارسة ونشاط: <span class="text-gray-700 font-normal">وظائف وأنشطة وبرامج تتعلق بتصريف شؤون الموارد البشرية في المنظمة.</span></li>
+                                <li class="font-bold text-blue-600">كحقل من حقول الدراسة: <span class="text-gray-700 font-normal">مجال تخصص يُدرس في الجامعات والمعاهد، ويحتل مركزاً مرموقاً في برامج التدريب.</span></li>
+                                <li class="font-bold text-blue-600">كمهنة: <span class="text-gray-700 font-normal">تعتبر أقرب لكونها "شبه مهنة" بسبب نقص القانون الأخلاقي الواضح والترخيص لمن ينضم للمهنة.</span></li>
+                                <li class="font-bold text-blue-600">كوحدة إدارية: <span class="text-gray-700 font-normal">إدارة مسؤولة عن جميع الأعمال المتعلقة بالموارد البشرية في التنظيم، ويتمثل عملها في أدوار حديثة كوضع السياسات وتنفيذها.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="space-y-12 mt-12">
+                         <div class="p-6 bg-gray-50 rounded-xl">
+                            <h3 class="text-2xl font-semibold text-gray-700">أهمية إدارة الموارد البشرية</h3>
+                            <div class="space-y-8 mt-4">
+                                <h4 class="text-xl font-bold text-blue-600">على مستوى المنظمة</h4>
+                                <ul class="list-disc list-inside mt-4 text-lg space-y-4">
+                                    <li>تعتبر إدارة لأهم وأغلى أصول المنظمة، وهي "الأصول المفكرة".</li>
+                                    <li>تتزايد قيمتها وإنتاجيتها بالخبرات المتراكمة على عكس الموارد المادية.</li>
+                                    <li>تتكامل مع باقي إدارات المنظمة وتزودها باحتياجاتها من الموارد البشرية.</li>
+                                    <li>تسهم كفاءة وفعالية الموارد البشرية في دعم أداء الإدارات الأخرى.</li>
+                                </ul>
+                                <h4 class="text-xl font-bold text-blue-600">على المستوى القومي</h4>
+                                <ul class="list-disc list-inside mt-4 text-lg space-y-4">
+                                    <li>أساس الاستقلال والنفوذ الاقتصادي للدولة.</li>
+                                    <li>أداة تنافسية عالمية تساهم في تعزيز قدرة الاقتصاد القومي.</li>
+                                    <li>العقول المبتكرة تخفض فاتورة التكنولوجيا المستوردة.</li>
+                                    <li>الموارد البشرية الفاعلة أداة لزيادة الصادرات.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab1-quiz-container" class="mt-16">
+                            <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة (صح أو خطأ)</h3>
+                    </div>
+                    <div id="tab1-written-questions-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة كتابية</h3>
+                    </div>
+                </div>
+
+                <!-- Chapter 2 -->
+                <div id="tab2" class="main-tab-content">
+                    <h2 class="text-4xl font-bold title mb-8 border-b-2 title-border pb-4">الفصل الثاني: الخلفية التاريخية والمفاهيم</h2>
+                    <div class="space-y-12">
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-green-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">الخلفية التاريخية لإدارة الموارد البشرية</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-2">
+                                <li>
+                                    <span class="colored-text">في منتصف القرن التاسع عشر:</span> بدأ الاهتمام بوظيفة إدارة الأفراد في المصانع الإنكليزية بشكل خاص. من أبرز المهتمين كان <span class="colored-text">روبرت أوين</span> الذي سمي <span class="colored-text">بأبي إدارة الأفراد</span>.
+                                </li>
+                                <li>
+                                    <span class="colored-text">في السنوات الأولى من القرن العشرين:</span> ظهرت بوادر انتشار الأفكار التي تنادي بالاهتمام بالفرد، وتأسست جمعية "Welfare Workers Association".
+                                </li>
+                                <li>
+                                    <span class="colored-text">عند نشوب الحرب العالمية الأولى:</span> نشأت الحاجة لجهة متخصصة في المنظمة تعنى بحل المشاكل الإنسانية.
+                                </li>
+                                <li>
+                                    <span class="colored-text">في الثلاثينيات من القرن الماضي:</span> برزت الحاجة إلى خلق <span class="colored-text">عمالة مستقرة</span> واعتماد سياسة <span class="colored-text">مواءمة الأشخاص مع الوظائف</span>.
+                                </li>
+                                <li>
+                                    <span class="colored-text">بعد انتهاء الحرب العالمية الثانية:</span> حصل تطور كبير في الاهتمام بتخطيط القوى العاملة والبحث عن المهارات التي تناسب التطورات التكنولوجية.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-green-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">إدارة الموارد البشرية ومدخل النظم</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                مدخل النظم يمثل أبرز المداخل الحديثة للنظر للعملية الإدارية وللمنظمة ككل. بموجب هذا المدخل، لا يمكن النظر إلى أي عمل إداري بمعزل عن الأعمال الإدارية الأخرى، بل يجب أن يعتبر أي عمل إداري أو وظيفة على أنه <span class="colored-text">عملية متكاملة</span>.
+                            </p>
+                            <p class="text-lg leading-relaxed mt-4">
+                                من آثار هذا المدخل: اعتبار أنشطة إدارة الموارد البشرية <span class="colored-text">متداخلة ومترابطة</span>، وأن مسؤولية الإدارة تشمل جميع العاملين، وأنها عملية <span class="colored-text">مستمرة وديناميكية</span>.
+                            </p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-green-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">مسؤولية إدارة الموارد البشرية</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                هي مسؤولية <span class="colored-text">مشتركة</span> بين كل من الإدارة العليا، إدارة الموارد البشرية، والمديرين المباشرين الذين يطبقون السياسات ويسهمون في تدريب وتقييم مرؤوسيهم.
+                            </p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-green-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">إدارة الأفراد أم إدارة الموارد البشرية</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                تطورت مسميات الإدارة من <span class="colored-text">إدارة المستخدمين</span> إلى <span class="colored-text">إدارة الأفراد</span> ثم <span class="colored-text">إدارة شؤون الموظفين</span> وصولاً إلى <span class="colored-text">إدارة الموارد البشرية</span>. هذا التطور يعكس نظرة أعمق للعاملين كـ <span class="colored-text">رأس مال فكري</span> يفوق في قيمته الأصول الأخرى، مما جعل مديري الموارد البشرية شركاء في <span class="colored-text">التخطيط الاستراتيجي</span>.
+                            </p>
+                        </div>
+                    </div>
+                    <div id="tab2-quiz-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة (صح أو خطأ)</h3>
+                    </div>
+                    <div id="tab2-written-questions-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة كتابية</h3>
+                    </div>
+                </div>
+
+                <!-- Chapter 3 -->
+                <div id="tab3" class="main-tab-content">
+                    <h2 class="text-4xl font-bold title mb-8 border-b-2 title-border pb-4">الفصل الثالث: تصميم وتحليل العمل</h2>
+                    <div class="space-y-12">
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-purple-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">مفهوم تصميم وتحليل العمل</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-2">
+                                <li><span class="colored-text">تصميم العمل:</span> هو أحد الأنشطة الأساسية التي تقوم بها إدارة الموارد البشرية لتحديد أهداف وخصائص وواجبات جميع الوظائف.</li>
+                                <li><span class="colored-text">تحليل العمل:</span> هو عملية دراسة وجمع المعلومات المرتبطة بالعمليات والمسؤوليات لوظيفة محددة.</li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-purple-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">علاقة تصميم وتحليل العمل بأنشطة الموارد البشرية</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-2">
+                                <li><span class="colored-text">تخطيط القوى العاملة:</span> توفر نتائج التحليل الأساس الذي تبنى عليه خطة المنظمة.</li>
+                                <li><span class="colored-text">الاستقطاب:</span> تساعد في معرفة من ستقوم المنظمة بجذبهم للعمل لديها.</li>
+                                <li><span class="colored-text">الاختيار والتعيين:</span> توفر معلومات كافية للمقارنة بين متطلبات الوظيفة ومؤهلات المتقدمين.</li>
+                                <li><span class="colored-text">برامج الأمن والحماية:</span> توضح طبيعة كل عمل مما يساعد في تصميم برامج الحماية.</li>
+                                <li><span class="colored-text">التدريب:</span> معرفة متطلبات الوظيفة ضرورية لإعداد برنامج تدريبي مناسب.</li>
+                                <li><span class="colored-text">الترقية:</span> توفر معلومات كافية عن الوظيفة الجديدة لمقارنتها بمواصفات الموظف.</li>
+                                <li><span class="colored-text">معايير قياس الكفاءة:</span> تساعد في تحديد المعايير التي يجب توفرها في الموظف لأداء عمله.</li>
+                                <li><span class="colored-text">تحديد الأجور والمكافآت:</span> الأجر العادل يرتبط بالأعباء والمسؤوليات الملقاة على عاتق شاغل الوظيفة.</li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-purple-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">مداخل تصميم العمل</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-2">
+                                <li><span class="colored-text">المدخل العلمي:</span> يركز على تقسيم العمل لجزيئات بسيطة.</li>
+                                <li><span class="colored-text">مدخل توسيع العمل أفقياً:</span> يوسع نطاق العمل بإضافة جزئيات متعددة.</li>
+                                <li><span class="colored-text">مدخل إغناء أو إثراء العمل:</span> يضيف خصائص وواجبات جديدة للعمل عمودياً.</li>
+                                <li><span class="colored-text">مدخل فريق العمل المتزامن:</span> يعتمد على الجماعة في تحديد الأهداف.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="tab3-quiz-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة (صح أو خطأ)</h3>
+                    </div>
+                    <div id="tab3-written-questions-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة كتابية</h3>
+                    </div>
+                </div>
+
+                <!-- Chapter 4 -->
+                <div id="tab4" class="main-tab-content">
+                    <h2 class="text-4xl font-bold title mb-8 border-b-2 title-border pb-4">الفصل الرابع: تخطيط الموارد البشرية</h2>
+                    <div class="space-y-12">
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-orange-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">تعريف تخطيط الموارد البشرية</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                مجموعة سياسات وإجراءات تهدف إلى تحديد وتوفير الأعداد والنوعيات المطلوبة من العمالة (الموارد البشرية) لأداء أعمال معينة في أوقات محددة وبتكلفة عمل مناسبة.
+                            </p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-orange-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">مراحل تخطيط الموارد البشرية</h3>
+                            <ul class="list-decimal list-inside mt-4 text-lg space-y-4">
+                                <li><span class="colored-text">الطلب على الموارد البشرية:</span> تقدير احتياجات المنشأة المستقبلية من الأفراد.</li>
+                                <li><span class="colored-text">عرض الموارد البشرية:</span> دراسة ما يتوافر لدى المنشأة من قوى عاملة (مخزون المهارة) وما يتوافر في أسواق العمالة الخارجية.</li>
+                                <li><span class="colored-text">مقارنة احتياجات المنشأة مع العرض:</span> في ضوء المقارنة يتم اتخاذ قرارات مثل توظيف عاملين جدد أو تسريح العاملين.</li>
+                                <li><span class="colored-text">تقييم ومتابعة تنفيذ الخطة:</span> يتم تقييم ومتابعة تنفيذ الخطة بصورة مستمرة لتصحيح الانحرافات.</li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-orange-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">المشاكل التي تواجه تخطيط الموارد البشرية</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-2">
+                                <li>عدم وجود البيانات اللازمة لتخطيط الموارد البشرية.</li>
+                                <li>نقص واضح في أخصائيين تخطيط الموارد البشرية.</li>
+                                <li>يصعب وجود معايير دقيقة ومحددة لتعريف مهام بعض الوظائف.</li>
+                                <li>غالباً ما تكون مستويات الإنتاجية منخفضة في فترة التكيف للعاملين الجدد.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="tab4-quiz-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة (صح أو خطأ)</h3>
+                    </div>
+                    <div id="tab4-written-questions-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة كتابية</h3>
+                    </div>
+                </div>
+
+                <!-- Chapter 5 -->
+                <div id="tab5" class="main-tab-content">
+                    <h2 class="text-4xl font-bold title mb-8 border-b-2 title-border pb-4">الفصل الخامس: استقطاب واختيار العاملين</h2>
+                    <div class="space-y-12">
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-red-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">مصادر استقطاب الموارد البشرية</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-2">
+                                <li><span class="colored-text">المصادر الداخلية:</span> تعتمد على العاملين الموجودين داخل المنظمة. مزاياها: تؤمن استقرار العاملين وترفع الروح المعنوية. عيوبها: حجب الأفكار الجديدة وقلة عدد الأفراد الذين تجري المفاضلة بينهم.</li>
+                                <li><span class="colored-text">المصادر الخارجية:</span> تعتمد على الحصول على الأفراد من خارج المنظمة. مزاياها: الاستفادة من خبرات ووجهات نظر جديدة. عيوبها: ضعف الروح المعنوية لأفراد المنظمة وتحميلها تكاليف إضافية.</li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-red-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">إجراءات اختيار الموارد البشرية</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                يتم الاختيار عبر مراحل متعددة تشمل:
+                                <ul class="list-decimal list-inside mt-2 text-lg space-y-2">
+                                    <li><span class="colored-text">طلب التوظيف:</span> أول مصدر معلومات متاح عن المتقدم.</li>
+                                    <li><span class="colored-text">المقابلات الشخصية:</span> تهدف لتقييم مدى ملاءمة الشخص للوظيفة وتزويده ببيانات هامة.</li>
+                                    <li><span class="colored-text">التحري والتوصية:</span> يعتمد على قاعدة أن أداء الشخص في المستقبل هو امتداد لأدائه في الماضي.</li>
+                                    <li><span class="colored-text">اختبارات الموظف:</span> إجراء منظم هدفه معاينة سلوك أو اتجاهات أو أداء شخص معين.</li>
+                                    <li><span class="colored-text">الفحص الطبي:</span> للتأكد من لياقة الشخص الصحية للعمل.</li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                    <div id="tab5-quiz-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة (صح أو خطأ)</h3>
+                    </div>
+                    <div id="tab5-written-questions-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة كتابية</h3>
+                    </div>
+                </div>
+
+                <!-- Chapter 6 -->
+                <div id="tab6" class="main-tab-content">
+                    <h2 class="text-4xl font-bold title mb-8 border-b-2 title-border pb-4">الفصل السادس: التدريب والتطوير</h2>
+                    <div class="space-y-12">
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-teal-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">تعريف التدريب</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                هو جهود إدارية منظمة تهدف لتحسين قدرة الإنسان على أداء عمل معين أو القيام بدور محدد في المنشأة.
+                            </p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-teal-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">المبادئ الأساسية في التدريب</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                يشمل مبادئ مثل مراعاة <span class="colored-text">الفروق الفردية</span> بين المتدربين، علاقة التدريب <span class="colored-text">بتحليل الوظائف</span>، <span class="colored-text">الدافعية</span>، <span class="colored-text">المشاركة الفعالة</span> من قبل المتدربين، واختيار المدربين بعناية.
+                            </p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-teal-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">مراحل العملية التدريبية</h3>
+                            <ul class="list-decimal list-inside mt-4 text-lg space-y-4">
+                                <li><span class="colored-text">تحديد الاحتياجات التدريبية:</span> معرفة الثغرات في الأداء لتحديد الأفراد المطلوب تدريبهم.</li>
+                                <li><span class="colored-text">تخطيط البرامج التدريبية:</span> تحديد الأهداف، المهارات، المنهاج، وأساليب التدريب.</li>
+                                <li><span class="colored-text">تنفيذ البرامج التدريبية:</span> تطبيق الخطط الموضوعة.</li>
+                                <li><span class="colored-text">تقييم البرامج التدريبية:</span> قياس كفاءة البرامج ومدى نجاحها في تحقيق الأهداف.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="tab6-quiz-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة (صح أو خطأ)</h3>
+                    </div>
+                    <div id="tab6-written-questions-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة كتابية</h3>
+                    </div>
+                </div>
+
+                <!-- Chapter 7 -->
+                <div id="tab7" class="main-tab-content">
+                    <h2 class="text-4xl font-bold title mb-8 border-b-2 title-border pb-4">الفصل السابع: تقويم الأداء</h2>
+                    <div class="space-y-12">
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-yellow-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">تعريف تقويم الأداء</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                نشاط شامل ومستمر يهدف لتحديد مدى صلاحية الفرد في أداء مهامه ومستوى أدائه لهذه المهام.
+                            </p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-yellow-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">طرق تقويم الأداء</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-2">
+                                <li><span class="colored-text">المقاييس الموضوعية:</span> تقيس الأداء بشكل رقمي مثل كمية الإنتاج أو المبيعات.</li>
+                                <li><span class="colored-text">المقاييس الشخصية/الذاتية:</span> تعتمد على الرأي الشخصي للمقوم، وتشمل أساليب مثل الترتيب، المقارنة المزدوجة، والإدارة بالأهداف.</li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-yellow-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">القائمون بعملية التقويم</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                يمكن أن يتم التقويم من قبل: المشرف المباشر، الموظف نفسه (<span class="colored-text">التقويم الذاتي</span>)، <span class="colored-text">الزملاء</span>، <span class="colored-text">المرؤوسين</span>، أو <span class="colored-text">العملاء</span>.
+                            </p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-yellow-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">مجالات استخدام نتائج التقويم</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-2">
+                                <li>تحديد <span class="colored-text">العلاوات</span> والترقية والنقل.</li>
+                                <li>الكشف عن <span class="colored-text">الاحتياجات التدريبية</span>.</li>
+                                <li>إعادة النظر في <span class="colored-text">سياسات الاختيار</span>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="tab7-quiz-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة (صح أو خطأ)</h3>
+                    </div>
+                    <div id="tab7-written-questions-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة كتابية</h3>
+                    </div>
+                </div>
+
+                <!-- Chapter 8 -->
+                <div id="tab8" class="main-tab-content">
+                    <h2 class="text-4xl font-bold title mb-8 border-b-2 title-border pb-4">الفصل الثامن: التعويضات والحوافز</h2>
+                    <div class="space-y-12">
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-amber-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">أنظمة دفع الرواتب والأجور</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-2">
+                                <li><span class="colored-text">نظام الأجر الزمني:</span> يتم دفع أجر محدد عن وحدة زمنية معينة بغض النظر عن كمية الإنتاج.</li>
+                                <li><span class="colored-text">نظام الأجر بالإنتاج:</span> يتوقف أجر الفرد على إنتاجيته، مما يوفر حافزاً مباشراً لزيادة الإنتاج.</li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-amber-400">
+                            <h3 class="text-2xl font-semibold text-gray-700">أنظمة الحوافز</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-2">
+                                <li><span class="colored-text">الحوافز الإيجابية:</span>
+                                    <ul class="list-circle list-inside mt-2 space-y-2">
+                                        <li><span class="colored-text">نقدية:</span> الأجور، الزيادات السنوية، المكافآت، المشاركة في الأرباح.</li>
+                                        <li><span class="colored-text">معنوية:</span> فرص الترقية، تقدير الجهود، إشراك العاملين في الإدارة، ضمان واستقرار العمل.</li>
+                                        <li><span class="colored-text">خدمات اجتماعية:</span> خدمات تقدمها المنشأة للعاملين دون مقابل مثل توفير مستلزمات المعيشة.</li>
+                                    </ul>
+                                </li>
+                                <li><span class="colored-text">الحوافز السلبية:</span> تعتمد على العقاب والردع والتخويف من خلال العمل التأديبي الذي يتضمن جزاءات مادية ومعنوية.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="tab8-quiz-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة (صح أو خطأ)</h3>
+                    </div>
+                    <div id="tab8-written-questions-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة كتابية</h3>
+                    </div>
+                </div>
+
+                <!-- Chapter 9 -->
+                <div id="tab9" class="main-tab-content">
+                    <h2 class="text-4xl font-bold title mb-8 border-b-2 title-border pb-4">الفصل التاسع: حركة الأفراد</h2>
+                    <div class="space-y-12">
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-gray-600">
+                            <h3 class="text-2xl font-semibold text-gray-700">مفهوم الترقية</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                <span class="colored-text">الترقية:</span> هي تقدم الأفراد العاملين وانتقالهم من مستويات أدنى لمستويات أعلى، أي انتقال الفرد من عمل ذي مسؤوليات أقل إلى عمل ذي مسؤوليات ومكانة أفضل.
+                            </p>
+                            <h4 class="text-xl font-bold mt-4 text-gray-600">أسس الترقية</h4>
+                            <ul class="list-disc list-inside mt-2 text-lg space-y-2">
+                                <li>أساس <span class="colored-text">الكفاءة/القدرة</span>.</li>
+                                <li>أساس <span class="colored-text">الأقدمية</span>.</li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-gray-600">
+                            <h3 class="text-2xl font-semibold text-gray-700">سياسة التنقلات</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                <span class="colored-text">النقل:</span> يعني حركة الفرد العامل من عمل إلى آخر بنفس المستوى المهني وبنفس مستوى الأجر أو الراتب.
+                            </p>
+                            <h4 class="text-xl font-bold mt-4 text-gray-600">أشكال التنقلات</h4>
+                            <ul class="list-disc list-inside mt-2 text-lg space-y-2">
+                                <li>تنقلات <span class="colored-text">الإنتاجية</span>.</li>
+                                <li>تنقلات <span class="colored-text">الإحلال أو الإبدال</span>.</li>
+                                <li>تنقلات <span class="colored-text">ورديات أو نوبات العمل</span>.</li>
+                                <li>تنقلات <span class="colored-text">الاستخدامات المتعددة</span>.</li>
+                                <li>تنقلات <span class="colored-text">العلاجية</span>.</li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-gray-600">
+                            <h3 class="text-2xl font-semibold text-gray-700">أشكال انفصال الأفراد عن المنظمة</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-2">
+                                <li><span class="colored-text">التقاعد:</span> انتهاء خدمة الفرد بالمنظمة نتيجة عامل السن.</li>
+                                <li><span class="colored-text">الإقالة:</span> الاستغناء عن خدمات بعض الأفراد العاملين الكفؤين بسبب الظروف الاقتصادية.</li>
+                                <li><span class="colored-text">الفصل/العزل:</span> يعتبر من القرارات غير الطبيعية التي تنعكس سلبياً على الأفراد العاملين.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="tab9-quiz-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة (صح أو خطأ)</h3>
+                    </div>
+                    <div id="tab9-written-questions-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة كتابية</h3>
+                    </div>
+                </div>
+
+                <!-- Chapter 10 -->
+                <div id="tab10" class="main-tab-content">
+                    <h2 class="text-4xl font-bold title mb-8 border-b-2 title-border pb-4">الفصل العاشر: الخدمات الصحية والأمن الصناعي</h2>
+                    <div class="space-y-12">
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-teal-600">
+                            <h3 class="text-2xl font-semibold text-gray-700">أهداف البرامج الصحية والأمن الصناعي</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-2">
+                                <li><span class="colored-text">تهيئة أفراد</span> ذوي قدرات صحية وجسمية تتناسب مع متطلبات التطوير.</li>
+                                <li><span class="colored-text">التقليل من الآثار السلبية</span> الناجمة عن إصابة الأفراد بالأمراض والحوادث أثناء العمل.</li>
+                                <li><span class="colored-text">الاهتمام والتركيز على الفرد العامل</span> باعتباره عنصراً أساسياً في العمل.</li>
+                                <li><span class="colored-text">تمتين وتطوير العلاقة</span> بين الأفراد العاملين والإدارة.</li>
+                                <li><span class="colored-text">التقليل من التكاليف</span> التي تتحملها المنظمة من جراء الأمراض والحوادث.</li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-teal-600">
+                            <h3 class="text-2xl font-semibold text-gray-700">برامج الخدمات الصحية</h3>
+                            <ul class="list-disc list-inside mt-4 text-lg space-y-2">
+                                <li><span class="colored-text">الخدمات الصحية الجسمية:</span> مهمتها الرئيسية هي تقديم الخدمات الوقائية التي تتضمن الفحوصات الدورية للعاملين.</li>
+                                <li><span class="colored-text">الخدمات الصحية العقلية والنفسية:</span> تهدف إلى الوقاية من الأمراض النفسية والعقلية التي تسببها ظروف وبيئة العمل.</li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl border-l-4 border-teal-600">
+                            <h3 class="text-2xl font-semibold text-gray-700">برنامج الأمن الصناعي</h3>
+                            <p class="text-lg leading-relaxed mt-4">
+                                يركز على حوادث العمل ويجب التخطيط المسبق له من خلال:
+                                <ul class="list-disc list-inside mt-2 text-lg space-y-2">
+                                    <li><span class="colored-text">تحديد أسباب الحوادث الصناعية.</span></li>
+                                    <li><span class="colored-text">تحديد درجة خطورة الحوادث الصناعية.</span></li>
+                                    <li><span class="colored-text">تحديد المؤشرات الأساسية المستخدمة للتنبؤ بالحوادث.</span></li>
+                                    <li><span class="colored-text">توثيق الحوادث وتحليلها.</span></li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                    <div id="tab10-quiz-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة (صح أو خطأ)</h3>
+                    </div>
+                    <div id="tab10-written-questions-container" class="mt-16">
+                        <h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة كتابية</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scroll to Top Button -->
+    <div class="scroll-to-top" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+        const chapterData = {
+            'tab1': {
+                color: '#3498db',
+                quiz: [
+                    { question: "هناك سهولة كبيرة في تحديد مفهوم إدارة الموارد البشرية.", answer: false },
+                    { question: "يمكن النظر إلى الموارد البشرية من منظورين (عام وخاص).", answer: true },
+                    { question: "تنحصر مهام إدارة الموارد البشرية في ثلاثة وظائف فقط هي: تحليل الوظائف، تخطيط الموارد البشرية، تزويد التنظيم بالموارد البشرية المطلوبة كماً ونوعاً.", answer: false },
+                    { question: "لقد أصبح لإدارات الموارد البشرية في التنظيمات أدواراً جديدة تختلف عن الأدوار القديمة التي كانت تقوم بها تلك الإدارات في أوائل هذا القرن.", answer: true },
+                    { question: "تتمثل الوظائف التنفيذية لمدير الموارد البشرية في أربع وظائف هي: التخطيط والتنظيم والتوجيه والرقابة.", answer: false },
+                    { question: "اكتسبت إدارة المواد البشرية كإحدى وظائف المنظمة العصرية أهمية كبيرة في القرن الحادي والعشرين.", answer: true },
+                    { question: "لا يوجد علاقة قوية بين إدارة المواد البشرية وغيرها من الإدارات أو الوظائف الأخرى للمنظمة.", answer: false }
+                ],
+                written: [
+                    'قارن باختصار بين كل مما يأتي: (أ) الوظائف الإدارية والوظائف التنفيذية. (ب) إدارة الموارد البشرية كمهنة وإدارة الموارد البشرية كنشاط. (ج) إدارة الموارد البشرية على مستوى المنظمة وعلى المستوى القومي.',
+                    'هل تتكامل أهمية الموارد البشرية على مستوى المنظمة مع أهميتها على المستوى القومي وكيف؟',
+                    'ما هي أدوار إدارة الموارد البشرية الحديثة؟',
+                    'لماذا أصبحت إدارة الموارد البشرية حقلاً متخصصاً يُدرس في الجامعات والمعاهد؟',
+                    'اشرح مفهوم إدارة الموارد البشرية كوحدة إدارية في تنظيم ما؟',
+                    'ابحث باختصار في وظائف مدير إدارة الموارد البشرية؟'
+                ]
+            },
+            'tab2': {
+                color: '#2ecc71',
+                quiz: [
+                    { question: "المنظمة هي عبارة عن نظام مغلق على بيئته الخارجية.", answer: false },
+                    { question: "لقد أحدث مدخل النظم مجموعة من الآثار في مجال إدارة الموارد البشرية.", answer: true },
+                    { question: "إن المسؤولية عن إدارة الموارد البشرية تنحصر في يد مدير الموارد البشرية.", answer: false },
+                    { question: "مع دخول الألفية الثالثة تواضع دور المعرفة في تشكيل أو صناعة المنتجات وحل محلها المادة الخام.", answer: false }
+                ],
+                written: [
+                    'حدد المراحل الأساسية التي تطورت فيها إدارة الموارد البشرية؟',
+                    'وضح أثر الحرب العالمية الثانية على تطور مفهوم إدارة الموارد البشرية؟',
+                    'وضح أثر مدخل النظم في إدارة الموارد البشرية؟',
+                    'بين كيف تطورت مسميات إدارة الأفراد إلى إدارة الموارد البشرية؟',
+                    'إدارة الموارد البشرية والعلاقات الإنسانية؟'
+                ]
+            },
+            'tab3': {
+                color: '#9b59b6',
+                quiz: [],
+                written: [
+                    'قارن باختصار بين كل مما يأتي: (1) الوظائف الإدارية والوظائف التنفيذية.',
+                    'وضح أثر الحرب العالمية الثانية على تطور مفهوم إدارة الموارد البشرية ؟',
+                    'ما هي أدوار إدارة الموارد البشرية الحديثة؟',
+                    'لماذا أصبحت إدارة الموارد البشرية حقلاً متخصصاً يُدرس ويُدرس في الجامعات والمعاهد ؟'
+                ]
+            },
+            'tab4': {
+                color: '#e67e22',
+                quiz: [],
+                written: [
+                    'اذكر أهم أهداف تخطيط الموارد البشرية.',
+                    'ما هي الاعتبارات والمتطلبات الأساسية لتخطيط الموارد البشرية؟',
+                    'ما هي مراحل تخطيط الموارد البشرية؟',
+                    'ما هي المشاكل التي تواجه عملية تخطيط الموارد البشرية؟'
+                ]
+            },
+            'tab5': {
+                color: '#e74c3c',
+                quiz: [],
+                written: [
+                    'ما هي أهمية عملية استقطاب واختيار العاملين؟',
+                    'قارن بين المصادر الداخلية والخارجية لاستقطاب الموارد البشرية من حيث المزايا والعيوب.',
+                    'اشرح إجراءات اختيار الموارد البشرية اللازمة للمنشأة.'
+                ]
+            },
+            'tab6': {
+                color: '#1abc9c',
+                quiz: [],
+                written: [
+                    'ما هي المبادئ الأساسية في التدريب؟',
+                    'اذكر مراحل العملية التدريبية.'
+                ]
+            },
+            'tab7': {
+                color: '#f1c40f',
+                quiz: [],
+                written: [
+                    'عرف تقويم الأداء واذكر أهميته.',
+                    'ما هي طرق تقويم أداء العاملين؟',
+                    'من هم القائمون بعملية تقويم الأداء وما هي مجالات استخدام نتائج التقويم؟'
+                ]
+            },
+            'tab8': {
+                color: '#a2795a',
+                quiz: [],
+                written: [
+                    'قارن بين نظام الأجر الزمني ونظام الأجر بالإنتاج من حيث المزايا والعيوب.',
+                    'ما هي شروط نجاح نظام الأجر بالإنتاج؟',
+                    'ما هي أنواع الحوافز التي يمكن أن تقدمها المنشأة للعاملين؟'
+                ]
+            },
+            'tab9': {
+                color: '#34495e',
+                quiz: [],
+                written: [
+                    'ما هي أشكال التنقلات وما هي أسبابها؟',
+                    'قارن بين التقاعد الإجباري والاختياري.',
+                    'ما هي أشكال انفصال الأفراد عن المنظمة؟'
+                ]
+            },
+            'tab10': {
+                color: '#16a085',
+                quiz: [],
+                written: [
+                    'ما هي أهداف البرامج الصحية والأمن الصناعي؟',
+                    'ما هي أنواع الخدمات الصحية المقدمة للعاملين؟',
+                    'ما هي عناصر برنامج الأمن الصناعي الفعال؟'
+                ]
+            }
+        };
+
+        const mainTabButtons = document.querySelectorAll('.main-tab-button');
+        const mainTabContents = document.querySelectorAll('.main-tab-content');
+        const root = document.documentElement;
+
+        function setActiveMainTab(tabId) {
+            mainTabButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            mainTabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            const activeTabButton = document.querySelector(`[data-tab="${tabId}"]`);
+            if (activeTabButton) {
+                activeTabButton.classList.add('active');
+                const color = activeTabButton.dataset.color;
+                root.style.setProperty('--theme-color', color);
+            }
+
+            const activeTabContent = document.getElementById(tabId);
+            if (activeTabContent) {
+                activeTabContent.classList.add('active');
+                
+                // Populate quiz and written questions for the newly active main tab
+                updateQuizAndWrittenQuestions(tabId);
+            }
+        }
+
+        function updateQuizAndWrittenQuestions(tabId) {
+            const data = chapterData[tabId];
+            const quizContainer = document.getElementById(`${tabId}-quiz-container`);
+            const writtenQuestionsContainer = document.getElementById(`${tabId}-written-questions-container`);
+
+            // Clear previous content
+            quizContainer.innerHTML = `<h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة (صح أو خطأ)</h3>`;
+            writtenQuestionsContainer.innerHTML = `<h3 class="text-2xl font-bold title mb-8 border-b-2 title-border pb-4">أسئلة كتابية</h3>`;
+
+            // Populate quiz questions
+            if (data && data.quiz.length > 0) {
+                const quizList = document.createElement('div');
+                quizList.className = 'space-y-6';
+                data.quiz.forEach((item, index) => {
+                    const quizItem = document.createElement('div');
+                    quizItem.className = 'quiz-item py-6 flex flex-col items-start';
+                    quizItem.innerHTML = `
+                        <p class="text-lg font-bold mb-4">${index + 1}. ${item.question}</p>
+                        <div class="flex space-x-4 space-x-reverse w-full">
+                            <button onclick="checkAnswer('${tabId}', ${index}, true)" class="quiz-button quiz-button-true w-1/2 py-3 px-6 rounded-full">صح</button>
+                            <button onclick="checkAnswer('${tabId}', ${index}, false)" class="quiz-button quiz-button-false w-1/2 py-3 px-6 rounded-full">خطأ</button>
+                        </div>
+                        <p id="result-${tabId}-${index}" class="result-message w-full text-center mt-4"></p>
+                    `;
+                    quizList.appendChild(quizItem);
+                });
+                quizContainer.appendChild(quizList);
+            } else {
+                 quizContainer.innerHTML += `<p class="text-center text-gray-500">لا توجد أسئلة (صح أو خطأ) لهذا الفصل في الملف الأصلي.</p>`;
+            }
+
+            // Populate written questions
+            if (data && data.written.length > 0) {
+                 const questionsList = document.createElement('div');
+                 questionsList.className = 'space-y-12';
+                 data.written.forEach((item, index) => {
+                    const questionItem = document.createElement('div');
+                    questionItem.className = 'p-6 bg-gray-50 rounded-xl';
+                    questionItem.innerHTML = `<p class="text-lg font-bold text-gray-700">السؤال ${index + 1}:</p><p class="mt-2 text-lg">${item}</p>`;
+                    questionsList.appendChild(questionItem);
+                });
+                writtenQuestionsContainer.appendChild(questionsList);
+            } else {
+                 writtenQuestionsContainer.innerHTML += `<p class="text-center text-gray-500">لا توجد أسئلة كتابية لهذا الفصل في الملف الأصلي.</p>`;
+            }
+        }
+
+        function checkAnswer(tabId, index, userAnswer) {
+            const data = chapterData[tabId];
+            const resultElement = document.getElementById(`result-${tabId}-${index}`);
+            
+            if (userAnswer === data.quiz[index].answer) {
+                resultElement.textContent = 'إجابة صحيحة! 🎉';
+                resultElement.className = 'result-message correct';
+            } else {
+                resultElement.textContent = `إجابة خاطئة. الإجابة الصحيحة هي: ${data.quiz[index].answer ? 'صح' : 'خطأ'}.`;
+                resultElement.className = 'result-message incorrect';
+            }
+            resultElement.style.display = 'block';
+
+            const questionElement = resultElement.closest('.quiz-item');
+            const questionButtons = questionElement.querySelectorAll('button');
+            questionButtons.forEach(button => button.disabled = true);
+        }
+        
+        mainTabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                setActiveMainTab(button.dataset.tab);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const button = document.querySelector('.scroll-to-top');
+            if (window.pageYOffset > 300) {
+                button.style.display = 'block';
+            } else {
+                button.style.display = 'none';
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setActiveMainTab('tab1');
+        });
+    </script>
+
+</body>
+</html>
